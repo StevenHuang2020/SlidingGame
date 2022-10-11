@@ -2,7 +2,7 @@
 src/.vs
 src/res/tmp
 src/x64
-
+*.ini
 
 # Prerequisites
 *.d
