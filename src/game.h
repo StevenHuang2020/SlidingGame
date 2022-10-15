@@ -58,7 +58,7 @@ private:
 	bool show_msg_dlg(const QString& title, const QString& text);
 	void clear_tempfiles(const QString& path);
 	void split_images();
-	QImage createSubImage(const QImage* image, const QRect& rect);
+	QImage createSubImage(const QImage& image, const QRect& rect);
 	QString get_abs_path(const QString& file) const;
 	void save_settings();
 	void read_settings();

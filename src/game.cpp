@@ -153,7 +153,7 @@ void Game::split_images()
 		for (int j = 0; j < col; j++) {
 			QRect rt(j * subW, i * subH, subW, subH);
 
-			QImage sub = createSubImage(&img, rt);
+			QImage sub = createSubImage(img, rt);
 
 			QString file = filePath + QString("%1.png").arg(i * row + j + 1);
 			sub.save(file);
@@ -161,10 +161,10 @@ void Game::split_images()
 	}
 }
 
-QImage Game::createSubImage(const QImage* image, const QRect& rect) {
-	size_t offset = rect.x() * image->depth() / 8 + rect.y() * image->bytesPerLine();
-	return QImage(image->bits() + offset, rect.width(), rect.height(),
-		image->bytesPerLine(), image->format());
+QImage Game::createSubImage(const QImage& image, const QRect& rect) {
+	size_t offset = rect.x() * image.depth() / 8 + rect.y() * image.bytesPerLine();
+	return QImage(image.bits() + offset, rect.width(), rect.height(),
+		image.bytesPerLine(), image.format());
 }
 
 void Game::final_game()
