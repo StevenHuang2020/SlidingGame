@@ -17,7 +17,13 @@
 #include "ui_game.h"
 #include "sliding_game.h"
 #include "setting_dlg.h"
+#include "camera_dlg.h"
 #include "app_settings.h"
+
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class gameClass; }
+QT_END_NAMESPACE
 
 class Game : public QMainWindow
 {
@@ -26,6 +32,35 @@ class Game : public QMainWindow
 public:
 	Game(QWidget* parent = nullptr);
 	~Game();
+
+public:
+	void update_labels();
+	void remove_labels();
+	void block_clicked(int index);
+	void play_bell() const { QSound::play(m_res_path + "notify.wav"); }
+	void play_win()const { QSound::play(m_res_path + "win.wav"); }
+	void play_background();
+
+private:
+	void init_game();
+	void final_game();
+	void print_data(const QString& pre = "") const;
+	void clear_tempfiles(const QString& path);
+	void split_images();
+	QImage createSubImage(const QImage& image, const QRect& rect);
+	QString get_abs_path(const QString& file) const;
+	void save_settings();
+	void read_settings();
+	bool show_yesno_dlg(const QString& title, const QString& text);
+	void show_msg_dlg(const QString& message = "", const QString& windowTitle = "Warning");
+private:
+	void mousePressEvent(QMouseEvent* event) override;
+private slots:
+	void on_actionNew_triggered();
+	void on_actionQuit_triggered() { QMainWindow::close(); }
+	void on_actionAbout_triggered() { QApplication::aboutQt(); }
+	void on_actionSetting_triggered();
+	void on_actionCamera_triggered();
 
 private:
 	Ui::gameClass ui;
@@ -44,29 +79,4 @@ private:
 	std::unique_ptr<QMediaPlaylist> m_bkmusic_playlist;
 
 	AppSettings m_settings;
-private:
-	void mousePressEvent(QMouseEvent* event) override;
-private slots:
-	void on_actionNew_triggered();
-	void on_actionQuit_triggered() { QMainWindow::close(); }
-	void on_actionAbout_triggered() { QApplication::aboutQt(); }
-	void on_actionSetting_triggered();
-private:
-	void init_game();
-	void final_game();
-	void print_data(const QString& pre = "") const;
-	bool show_msg_dlg(const QString& title, const QString& text);
-	void clear_tempfiles(const QString& path);
-	void split_images();
-	QImage createSubImage(const QImage& image, const QRect& rect);
-	QString get_abs_path(const QString& file) const;
-	void save_settings();
-	void read_settings();
-public:
-	void update_labels();
-	void remove_labels();
-	void block_clicked(int index);
-	void play_bell() const { QSound::play(m_res_path + "notify.wav"); }
-	void play_win()const { QSound::play(m_res_path + "win.wav"); }
-	void play_background();
 };

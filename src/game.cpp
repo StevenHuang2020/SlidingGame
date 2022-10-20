@@ -214,6 +214,8 @@ void Game::block_clicked(int index)
 {
 	bool ok = m_game->clicked(index);
 
+	print_data("clicked:");
+
 	if (!ok) {
 		qDebug("can't moved!");
 		return;
@@ -225,7 +227,7 @@ void Game::block_clicked(int index)
 
 		play_win();
 
-		bool ret = show_msg_dlg("Congratulations!", "Paly again?");
+		bool ret = show_yesno_dlg("Congratulations!", "Paly again?");
 		if (ret) {
 			on_actionNew_triggered();
 			return;
@@ -235,7 +237,7 @@ void Game::block_clicked(int index)
 	play_bell();
 }
 
-bool Game::show_msg_dlg(const QString& title, const QString& text)
+bool Game::show_yesno_dlg(const QString& title, const QString& text)
 {
 	QMessageBox::StandardButton reply;
 	reply = QMessageBox::question(this, title, text,
@@ -272,12 +274,15 @@ void Game::on_actionSetting_triggered()
 			play_background();
 		}
 
-		save_settings();
+		if (m_game->reset_game(m_col, m_row)) {
+			init_game();
+			on_actionNew_triggered();
 
-		m_game->reset_game(m_col, m_row);
-		init_game();
-
-		on_actionNew_triggered();
+			save_settings();
+		}
+		else {
+			show_msg_dlg("Setting failed, invalid parameter!");
+		}
 	}
 }
 
@@ -337,4 +342,27 @@ void Game::save_settings()
 	m_settings.set_general("puzzle-image", m_image);
 	m_settings.set_info("game", "software");
 	m_settings.set_info("Steven-Huang", "author");
+}
+
+void Game::on_actionCamera_triggered()
+{
+	Camera_dlg dialog(this);
+
+	int result = dialog.exec();
+	if (QDialog::Accepted == result) {
+	}
+}
+
+void Game::show_msg_dlg(const QString& message, const QString& windowTitle)
+{
+	QMessageBox msgBox;
+
+	msgBox.setText(message);
+	msgBox.setWindowTitle(windowTitle);
+
+	msgBox.setModal(true);
+	msgBox.show();
+	msgBox.move(frameGeometry().center() - msgBox.rect().center());
+	msgBox.setWindowFlags(msgBox.windowFlags() | Qt::Popup);
+	msgBox.exec();
 }

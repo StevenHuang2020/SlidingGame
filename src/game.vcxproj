@@ -32,12 +32,12 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>5.12.12_msvc2017_64</QtInstall>
-    <QtModules>core;gui;multimedia;widgets</QtModules>
+    <QtModules>core;gui;multimedia;widgets;multimediawidgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>5.12.12_msvc2017_64</QtInstall>
-    <QtModules>core;gui;multimedia;widgets</QtModules>
+    <QtModules>core;gui;multimedia;widgets;multimediawidgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -86,9 +86,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app_settings.cpp" />
+    <ClCompile Include="camera_dlg.cpp" />
     <ClCompile Include="setting_dlg.cpp" />
     <ClCompile Include="sliding_game.cpp" />
     <QtRcc Include="game.qrc" />
+    <QtUic Include="camera_dlg.ui" />
     <QtUic Include="game.ui" />
     <QtMoc Include="game.h" />
     <ClCompile Include="game.cpp" />
@@ -102,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app_settings.h" />
+    <ClInclude Include="camera_dlg.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

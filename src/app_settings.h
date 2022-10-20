@@ -7,8 +7,12 @@ class AppSettings {
 public:
 	AppSettings(const QString& file = "game.ini");
 	~AppSettings() {};
-private:
-	std::unique_ptr <QSettings> m_pSettings;
+
+public:
+	QVariant get_general(const QString& key) const;
+	void set_general(const QString& key, const QVariant& value);
+	QVariant get_info(const QString& key) const;
+	void set_info(const QString& key, const QVariant& value);
 
 private:
 	typedef enum SectionID {
@@ -23,7 +27,6 @@ private:
 		const char* str;
 	}Section;
 
-	static const Section m_sections[];
 private:
 	void print_settings() const;
 
@@ -32,10 +35,7 @@ private:
 	QVariant get_value(const QString& group, const QString& key) const;
 	QVariant get_value(SectionID id, const QString& key) const;
 
-public:
-	QVariant get_general(const QString& key) const;
-	void set_general(const QString& key, const QVariant& value);
-
-	QVariant get_info(const QString& key) const;
-	void set_info(const QString& key, const QVariant& value);
+private:
+	std::unique_ptr <QSettings> m_pSettings;
+	static const Section m_sections[];
 };

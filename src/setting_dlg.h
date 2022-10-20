@@ -12,8 +12,8 @@ class SettingDlg : public QDialog
 public:
 	SettingDlg(QWidget* parent = Q_NULLPTR);
 	~SettingDlg() {};
-private:
-	Ui::setting_dlg ui;
+
+
 public:
 	typedef struct SettingDlgData {
 		int col;
@@ -21,22 +21,24 @@ public:
 		GameType type;
 		QString puzzle_image;
 		QString bk_music;
-		bool operator==(const SettingDlgData& data) const
+		bool operator == (const SettingDlgData& data) const
 		{
 			return (col == data.col && row == data.row
 				&& type == data.type && puzzle_image == data.puzzle_image
 				&& bk_music == data.bk_music);
 		}
-		bool operator!=(const SettingDlgData& data) const
+		bool operator != (const SettingDlgData& data) const
 		{
 			return (col != data.col || row != data.row
 				|| type != data.type || puzzle_image != data.puzzle_image
 				|| bk_music != data.bk_music);
 		}
 	}SettingDlgData;
-private:
-	SettingDlgData m_data;
-	static std::map<GameType, QString> m_game_types;
+
+public:
+	void init_dlg_value(const SettingDlgData& data);
+	void get_data(SettingDlgData& data) const;
+
 private slots:
 	void on_okButton_clicked();
 	void on_btn_Music_clicked();
@@ -53,7 +55,9 @@ private:
 	void update_data();
 	bool is_changed();
 	void set_combox_sel(GameType type);
-public:
-	void init_dlg_value(const SettingDlgData& data);
-	void get_data(SettingDlgData& data) const;
+
+private:
+	Ui::setting_dlg ui;
+	SettingDlgData m_data;
+	static std::map<GameType, QString> m_game_types;
 };

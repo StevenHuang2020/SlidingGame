@@ -12,6 +12,10 @@ SettingDlg::SettingDlg(QWidget* parent)
 	ui.setupUi(this);
 	setLayout(ui.gridLayout);
 
+	/*setWindowFlags(windowFlags() &
+		~Qt::WindowMaximizeButtonHint &
+		~Qt::WindowContextHelpButtonHint);*/
+
 	ui.lineEdit_col->setValidator(new QIntValidator);
 	ui.lineEdit_row->setValidator(new QIntValidator);
 

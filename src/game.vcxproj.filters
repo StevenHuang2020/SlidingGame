@@ -55,9 +55,15 @@
     <ClCompile Include="app_settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="camera_dlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="setting_dlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="camera_dlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -68,6 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app_settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="camera_dlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

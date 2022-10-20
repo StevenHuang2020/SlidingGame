@@ -14,21 +14,7 @@
    <string>game</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>11</x>
-      <y>11</y>
-      <width>281</width>
-      <height>211</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <property name="spacing">
-      <number>2</number>
-     </property>
-    </layout>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -45,6 +31,7 @@
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionSetting"/>
+    <addaction name="actionCamera"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -83,6 +70,11 @@
   <action name="actionSetting">
    <property name="text">
     <string>Setting</string>
+   </property>
+  </action>
+  <action name="actionCamera">
+   <property name="text">
+    <string>Camera</string>
    </property>
   </action>
  </widget>

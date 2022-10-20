@@ -49,8 +49,8 @@ bool SlidingGame::reset_game(uint8_t row, uint8_t col)
 		return false;
 	}
 
-	if (row == this->row() && col == this->col())
-		return false;
+	/*if (row == this->row() && col == this->col())
+		return false;*/
 
 	m_Row = row;
 	m_Col = col;
