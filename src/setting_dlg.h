@@ -21,17 +21,19 @@ public:
 		GameType type;
 		QString puzzle_image;
 		QString bk_music;
+		bool bk_music_check;
 		bool operator == (const SettingDlgData& data) const
 		{
 			return (col == data.col && row == data.row
 				&& type == data.type && puzzle_image == data.puzzle_image
-				&& bk_music == data.bk_music);
+				&& bk_music == data.bk_music && bk_music_check == data.bk_music_check);
 		}
 		bool operator != (const SettingDlgData& data) const
 		{
 			return (col != data.col || row != data.row
 				|| type != data.type || puzzle_image != data.puzzle_image
-				|| bk_music != data.bk_music);
+				|| bk_music != data.bk_music ||
+				bk_music_check != data.bk_music_check);
 		}
 	}SettingDlgData;
 
@@ -49,6 +51,7 @@ private:
 	int get_type() const { return ui.comboBox->itemData(ui.comboBox->currentIndex()).toInt(); }
 	QString get_image_file() const { return ui.lineEdit_image->text(); }
 	QString get_music_file() const { return ui.lineEdit_music->text(); }
+	bool get_musch_checked() const { return ui.checkBox->isChecked(); }
 	void set_image_file(const QString& file) { ui.lineEdit_image->setText(file); }
 	void set_music_file(const QString& file) { ui.lineEdit_music->setText(file); }
 

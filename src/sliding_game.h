@@ -28,7 +28,7 @@ public:
 public:
 	void new_game();
 	bool check_over() const;
-	bool clicked(const int& index);
+	int clicked(const int& index);
 	bool reset_game(uint8_t row, uint8_t col);
 	uint8_t row()const { return m_Row; }
 	uint8_t col()const { return m_Col; }

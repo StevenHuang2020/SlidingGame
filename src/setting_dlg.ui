@@ -152,6 +152,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox">
+        <property name="text">
+         <string>ON</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item row="1" column="1">

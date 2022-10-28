@@ -35,6 +35,7 @@ void SettingDlg::get_data(SettingDlgData& data) const
 	data.row = get_edit_row();
 	data.type = (GameType)get_type();
 	data.bk_music = get_music_file();
+	data.bk_music_check = get_musch_checked();
 	data.puzzle_image = get_image_file();
 }
 
@@ -52,6 +53,8 @@ void SettingDlg::update_data()
 	set_combox_sel(m_data.type);
 
 	ui.lineEdit_music->setText(m_data.bk_music);
+	ui.checkBox->setChecked(m_data.bk_music_check);
+
 	ui.lineEdit_image->setText(m_data.puzzle_image);
 }
 

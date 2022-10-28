@@ -194,14 +194,15 @@ bool SlidingGame::check_over() const
 	return (m_data == m_target);
 }
 
-bool SlidingGame::clicked(const int& index)
+int SlidingGame::clicked(const int& index)
 {
+	int dst_index = -1;
 	if (index < 0 || index >= total())
-		return false;
+		return dst_index;
 
 	const int v = get_data(index);
 	if (blank_block(v))
-		return false;
+		return dst_index;
 
 	bool b_left = can_move_left(index);
 	bool b_right = can_move_right(index);
@@ -210,21 +211,25 @@ bool SlidingGame::clicked(const int& index)
 
 	if (b_left)
 	{
-		return swap(index, index - 1);
+		dst_index = index - 1;
+
 	}
 	else if (b_right)
 	{
-		return swap(index, index + 1);
+		dst_index = index + 1;
 	}
 	else if (b_up) {
-		return swap(index, index - col());
+		dst_index = index - col();
 	}
 	else if (b_down) {
-		return swap(index, index + col());
+		dst_index = index + col();
 	}
 	else {
 		assert("Can't move this index!");
 	}
 
-	return false;
+	if (dst_index != -1)
+		swap(index, dst_index);
+
+	return dst_index;
 }

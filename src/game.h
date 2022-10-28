@@ -36,10 +36,10 @@ public:
 public:
 	void update_labels();
 	void remove_labels();
-	void block_clicked(int index);
+	void block_clicked(const int& index);
 	void play_bell() const { QSound::play(m_res_path + "notify.wav"); }
 	void play_win()const { QSound::play(m_res_path + "win.wav"); }
-	void play_background();
+	void play_background(bool play = true);
 
 private:
 	void init_game();
@@ -53,6 +53,7 @@ private:
 	void read_settings();
 	bool show_yesno_dlg(const QString& title, const QString& text);
 	void show_msg_dlg(const QString& message = "", const QString& windowTitle = "Warning");
+	void show_msg_Status(const QString& message);
 private:
 	void mousePressEvent(QMouseEvent* event) override;
 private slots:
@@ -75,6 +76,7 @@ private:
 	GameType m_type;
 	QString m_image;  // puzzle image path
 	QString m_music;  // background music file
+	bool m_music_on;
 	std::unique_ptr<QMediaPlayer> m_bkmusic_player;
 	std::unique_ptr<QMediaPlaylist> m_bkmusic_playlist;
 

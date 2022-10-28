@@ -12,7 +12,8 @@ Game::Game(QWidget* parent)
 	m_bkmusic_player(std::make_unique<QMediaPlayer>()),
 	m_bkmusic_playlist(std::make_unique<QMediaPlaylist>()),
 	m_image(get_abs_path(m_res_path + "puzzle.png")),
-	m_music(get_abs_path(m_res_path + "music.mp3"))
+	m_music(get_abs_path(m_res_path + "music.mp3")),
+	m_music_on(true)
 {
 	ui.setupUi(this);
 	centralWidget()->setLayout(ui.gridLayout);
@@ -25,7 +26,7 @@ Game::Game(QWidget* parent)
 
 	on_actionNew_triggered();
 
-	play_background();
+	play_background(m_music_on);
 }
 
 Game::~Game()
@@ -210,18 +211,21 @@ void Game::update_labels()
 	}
 }
 
-void Game::block_clicked(int index)
+void Game::block_clicked(const int& index)
 {
-	bool ok = m_game->clicked(index);
+	const int dst_index = m_game->clicked(index);
 
 	print_data("clicked:");
 
-	if (!ok) {
-		qDebug("can't moved!");
+	if (dst_index == -1) {
+		show_msg_Status("Can't moved!");
 		return;
 	}
 
 	update_labels();
+
+	QString msg = QString("Tile %1 has been moved to %2.").arg(index).arg(dst_index);
+	show_msg_Status(msg);
 
 	if (m_game->check_over()) {
 
@@ -256,6 +260,7 @@ void Game::on_actionSetting_triggered()
 	data.type = m_type;
 	data.bk_music = m_music;
 	data.puzzle_image = m_image;
+	data.bk_music_check = m_music_on;
 
 	dialog.init_dlg_value(data);
 
@@ -269,9 +274,15 @@ void Game::on_actionSetting_triggered()
 		m_row = new_data.row;
 		m_type = new_data.type;
 		m_image = new_data.puzzle_image;
-		if (m_music != new_data.bk_music) {
-			m_music = new_data.bk_music;
-			play_background();
+		m_music_on = new_data.bk_music_check;
+		if (m_music_on) {
+			if (m_music != new_data.bk_music) {
+				m_music = new_data.bk_music;
+				play_background();
+			}
+		}
+		else {
+			play_background(false);
 		}
 
 		if (m_game->reset_game(m_col, m_row)) {
@@ -286,7 +297,7 @@ void Game::on_actionSetting_triggered()
 	}
 }
 
-void Game::play_background()
+void Game::play_background(bool play)
 {
 	QString file_str = m_music;
 
@@ -295,12 +306,17 @@ void Game::play_background()
 		return;
 
 	m_bkmusic_playlist->clear();
-	m_bkmusic_playlist->addMedia(QUrl::fromLocalFile(file_str));
-	m_bkmusic_playlist->setPlaybackMode(QMediaPlaylist::Loop);
+	if (play) {
+		m_bkmusic_playlist->addMedia(QUrl::fromLocalFile(file_str));
+		m_bkmusic_playlist->setPlaybackMode(QMediaPlaylist::Loop);
 
-	m_bkmusic_player->setPlaylist(m_bkmusic_playlist.get());
-	m_bkmusic_player->setVolume(30);
-	m_bkmusic_player->play();
+		m_bkmusic_player->setPlaylist(m_bkmusic_playlist.get());
+		m_bkmusic_player->setVolume(30);
+		m_bkmusic_player->play();
+	}
+	else {
+		m_bkmusic_player->stop();
+	}
 }
 
 void Game::read_settings()
@@ -326,6 +342,11 @@ void Game::read_settings()
 		m_music = values.toString();
 	}
 
+	values = m_settings.get_general("music_on");
+	if (values.isValid()) {
+		m_music_on = (bool)values.toInt();
+	}
+
 	values = m_settings.get_general("puzzle-image");
 	if (values.isValid()) {
 		m_image = values.toString();
@@ -337,9 +358,10 @@ void Game::save_settings()
 	m_settings.set_general("col", m_col);
 	m_settings.set_general("row", m_row);
 	m_settings.set_general("type", (int)m_type);
-
 	m_settings.set_general("music", m_music);
+	m_settings.set_general("music_on", (int)m_music_on);
 	m_settings.set_general("puzzle-image", m_image);
+
 	m_settings.set_info("game", "software");
 	m_settings.set_info("Steven-Huang", "author");
 }
@@ -365,4 +387,9 @@ void Game::show_msg_dlg(const QString& message, const QString& windowTitle)
 	msgBox.move(frameGeometry().center() - msgBox.rect().center());
 	msgBox.setWindowFlags(msgBox.windowFlags() | Qt::Popup);
 	msgBox.exec();
+}
+
+void Game::show_msg_Status(const QString& message)
+{
+	statusBar()->showMessage(message);
 }
