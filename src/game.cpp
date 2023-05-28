@@ -276,10 +276,8 @@ void Game::on_actionSetting_triggered()
 		m_image = new_data.puzzle_image;
 		m_music_on = new_data.bk_music_check;
 		if (m_music_on) {
-			if (m_music != new_data.bk_music) {
-				m_music = new_data.bk_music;
-				play_background();
-			}
+			m_music = new_data.bk_music;
+			play_background();
 		}
 		else {
 			play_background(false);
