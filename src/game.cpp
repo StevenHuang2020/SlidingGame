@@ -4,8 +4,7 @@
 QString Game::m_res_path = "./res/";
 QString Game::m_tmp_path = "tmp/";
 
-Game::Game(QWidget* parent)
-	: QMainWindow(parent),
+Game::Game(QWidget* parent) : QMainWindow(parent),
 	m_col(3),
 	m_row(3),
 	m_type(GameType::E_Number),
@@ -13,7 +12,9 @@ Game::Game(QWidget* parent)
 	m_bkmusic_playlist(std::make_unique<QMediaPlaylist>()),
 	m_image(get_abs_path(m_res_path + "puzzle.png")),
 	m_music(get_abs_path(m_res_path + "music.mp3")),
-	m_music_on(true)
+	m_music_on(true),
+	m_color_active("#FF91AF"),
+	m_color_noactive("gray")
 {
 	ui.setupUi(this);
 	centralWidget()->setLayout(ui.gridLayout);
@@ -91,18 +92,29 @@ void Game::init_game()
 		int id = i;
 		pLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
+		QString common_style = "border-style: outset;	\
+					border-width: 2px;	\
+					border-radius: 10px;	\
+					border-color: beige;	\
+					padding: 6px; ";
+
 		if (id == 0) {
-			pLabel->setStyleSheet(
-				"background-color: gray;");
+			QString style = "background-color: ";
+			style += m_color_noactive;
+			style += ";";
+			pLabel->setStyleSheet(style + common_style);
 		}
 		else {
 			if (m_type == GameType::E_Number) {
 				pLabel->setText(QString::number(id));
-				QString bkColor = "background-color: green;";
-				QString fontSize = "font: 28pt;";
-				QString fontStyle = "font-style: italic; font-style: bold;";
 
-				pLabel->setStyleSheet(bkColor + fontSize + fontStyle);
+				QString style = "background-color: ";
+				style += m_color_active;
+				style += ";";
+				style += "font: 28pt;";
+				style += "font-style: italic; font-style: bold; font-family: Consolas;";
+				
+				pLabel->setStyleSheet(style + common_style);
 			}
 			else {
 				QString file = QString("%1.png").arg(id);
@@ -120,9 +132,8 @@ void Game::init_game()
 void Game::clear_tempfiles(const QString& path)
 {
 	QDir dir(path);
-	for (QString& dirFile : dir.entryList()) {
+	for (QString& dirFile : dir.entryList())
 		dir.remove(dirFile);
-	}
 }
 
 void Game::split_images()
@@ -261,6 +272,8 @@ void Game::on_actionSetting_triggered()
 	data.bk_music = m_music;
 	data.puzzle_image = m_image;
 	data.bk_music_check = m_music_on;
+	data.color_active = m_color_active;
+	data.color_noactive = m_color_noactive;
 
 	dialog.init_dlg_value(data);
 
@@ -275,22 +288,19 @@ void Game::on_actionSetting_triggered()
 		m_type = new_data.type;
 		m_image = new_data.puzzle_image;
 		m_music_on = new_data.bk_music_check;
-		if (m_music_on) {
-			m_music = new_data.bk_music;
-			play_background();
-		}
-		else {
-			play_background(false);
-		}
+		m_music = new_data.bk_music;
+		m_color_active = new_data.color_active;
+		m_color_noactive = new_data.color_noactive;
+
+		play_background(m_music_on);
 
 		if (m_game->reset_game(m_col, m_row)) {
 			init_game();
 			on_actionNew_triggered();
-
 			save_settings();
 		}
 		else {
-			show_msg_dlg("Setting failed, invalid parameter!");
+			show_msg_dlg("Parameters error, invalid Settings!");
 		}
 	}
 }
@@ -304,51 +314,53 @@ void Game::play_background(bool play)
 		return;
 
 	m_bkmusic_playlist->clear();
-	if (play) {
-		m_bkmusic_playlist->addMedia(QUrl::fromLocalFile(file_str));
-		m_bkmusic_playlist->setPlaybackMode(QMediaPlaylist::Loop);
-
-		m_bkmusic_player->setPlaylist(m_bkmusic_playlist.get());
-		m_bkmusic_player->setVolume(30);
-		m_bkmusic_player->play();
-	}
-	else {
+	if (!play) {
 		m_bkmusic_player->stop();
+		return;
 	}
+
+	m_bkmusic_playlist->addMedia(QUrl::fromLocalFile(file_str));
+	m_bkmusic_playlist->setPlaybackMode(QMediaPlaylist::Loop);
+
+	m_bkmusic_player->setPlaylist(m_bkmusic_playlist.get());
+	m_bkmusic_player->setVolume(30);
+	m_bkmusic_player->play();
 }
 
 void Game::read_settings()
 {
 	int value;
 	QVariant values = m_settings.get_general("col");
-	if (values.isValid()) {
+	if (values.isValid()) 
 		m_col = values.toInt();
-	}
 
 	values = m_settings.get_general("row");
-	if (values.isValid()) {
+	if (values.isValid())
 		m_row = values.toInt();
-	}
 
 	values = m_settings.get_general("type");
-	if (values.isValid()) {
+	if (values.isValid())
 		m_type = (GameType)values.toInt();
-	}
 
 	values = m_settings.get_general("music");
-	if (values.isValid()) {
+	if (values.isValid())
 		m_music = values.toString();
-	}
 
 	values = m_settings.get_general("music_on");
-	if (values.isValid()) {
+	if (values.isValid())
 		m_music_on = (bool)values.toInt();
-	}
 
 	values = m_settings.get_general("puzzle-image");
-	if (values.isValid()) {
+	if (values.isValid())
 		m_image = values.toString();
-	}
+
+	values = m_settings.get_general("color-active");
+	if (values.isValid())
+		m_color_active = values.toString();
+
+	values = m_settings.get_general("color-noactive");
+	if (values.isValid())
+		m_color_noactive = values.toString();
 }
 
 void Game::save_settings()
@@ -359,7 +371,8 @@ void Game::save_settings()
 	m_settings.set_general("music", m_music);
 	m_settings.set_general("music_on", (int)m_music_on);
 	m_settings.set_general("puzzle-image", m_image);
-
+	m_settings.set_general("color-active", m_color_active);
+	m_settings.set_general("color-noactive", m_color_noactive);
 	m_settings.set_info("game", "software");
 	m_settings.set_info("Steven-Huang", "author");
 }
@@ -389,5 +402,5 @@ void Game::show_msg_dlg(const QString& message, const QString& windowTitle)
 
 void Game::show_msg_Status(const QString& message)
 {
-	statusBar()->showMessage(message);
+	// statusBar()->showMessage(message);
 }

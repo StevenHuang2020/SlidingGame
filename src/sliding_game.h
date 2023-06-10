@@ -55,4 +55,5 @@ private:
 
 	std::vector<int> m_target;
 	std::vector<int> m_data;
+	std::vector<int> m_lastData;
 };

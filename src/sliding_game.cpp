@@ -16,6 +16,7 @@ void SlidingGame::init_data()
 	m_target.push_back(0);
 
 	m_data = m_target;
+	m_lastData = m_target;
 }
 
 void SlidingGame::new_game()
@@ -23,22 +24,25 @@ void SlidingGame::new_game()
 #if 0
 	std::random_shuffle(m_data.begin(), m_data.end());
 #else
+	m_data = m_lastData;
 	// simulate to move N times to generate a random game state.
 	auto begin = std::chrono::steady_clock::now();
 
 	for (int i = 0; i < 10000; i++) {
-
 		std::vector<int> indexs;
 		get_click_available_index(indexs);
-		// get_click_available_index2(indexs);
+		if (indexs.size() == 0)
+			continue;
 
-		int index = indexs[rand() % indexs.size()];
-		clicked(index);
+		// get_click_available_index2(indexs);
+		clicked(indexs[rand() % indexs.size()]);
 	}
 
 	auto end = std::chrono::steady_clock::now();
 	auto times = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	std::cout << "Run time = " << times << "[µs]\n";
+
+	m_lastData = m_data;
 #endif
 }
 

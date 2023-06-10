@@ -77,6 +77,9 @@ private:
 	QString m_image;  // puzzle image path
 	QString m_music;  // background music file
 	bool m_music_on;
+	QString m_color_active;
+	QString m_color_noactive;
+
 	std::unique_ptr<QMediaPlayer> m_bkmusic_player;
 	std::unique_ptr<QMediaPlaylist> m_bkmusic_playlist;
 
