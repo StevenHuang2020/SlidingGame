@@ -20,7 +20,7 @@ void SlidingGame::init_data()
 void SlidingGame::new_game()
 {
 #if 0
-	std::random_shuffle(m_data.begin(), m_data.end());
+    std::random_shuffle(m_data.begin(), m_data.end());
 #else
     m_data = m_lastData;
     // simulate to move N times to generate a random game state.
@@ -39,7 +39,7 @@ void SlidingGame::new_game()
 
     auto end = std::chrono::steady_clock::now();
     auto times = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-    std::cout << "Run time = " << times << "[µs]\n";
+    std::cout << "Run time = " << times << "[us]\n";
     m_lastData = m_data;
 #endif
 }

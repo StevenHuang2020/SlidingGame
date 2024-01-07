@@ -83,51 +83,51 @@ void Game::init_game()
     if (m_type == GameType::E_Image)
         split_images(); // GameType::E_Image
 
-    for (int i = 0; i < m_game->total(); i++)
+    QString common_style = "border-style: outset;	\
+					border-width: 1px;	\
+					border-radius: 5px;	\
+					border-color: beige;	\
+					padding: 0px; ";
+
+    for (uint8_t i = 0; i < m_game->total(); i++)
     {
         QLabel* pLabel = new QLabel(this);
+        pLabel->setScaledContents(true);
+        //pLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+        pLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+        pLabel->setAlignment(Qt::AlignCenter);
 
-        int id = i;
-        pLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-
-        QString common_style = "border-style: outset;	\
-					border-width: 2px;	\
-					border-radius: 10px;	\
-					border-color: beige;	\
-					padding: 6px; ";
-
-        if (id == 0)
+        QString style = "";
+        if (i == 0)
         {
-            QString style = "background-color: ";
+            style = "background-color: ";
             style += m_color_noactive;
             style += ";";
-            pLabel->setStyleSheet(style + common_style);
         }
         else
         {
             if (m_type == GameType::E_Number)
             {
-                pLabel->setText(QString::number(id));
+                pLabel->setText(QString::number(i));
 
-                QString style = "background-color: ";
+                style = "background-color: ";
                 style += m_color_active;
                 style += ";";
                 style += "font: 28pt;";
                 style += "font-style: italic; font-style: bold; font-family: Consolas;";
-
-                pLabel->setStyleSheet(style + common_style);
             }
             else
             {
-                QString file = QString("%1.png").arg(id);
+                QString file = QString("%1.png").arg(i);
                 QImage img(m_res_path + m_tmp_path + file);
                 pLabel->setPixmap(QPixmap::fromImage(img));
             }
         }
 
-        pLabel->setAlignment(Qt::AlignCenter);
+        pLabel->setStyleSheet(style + common_style);
+
         m_labels.push_back(pLabel);
-        m_map_lables[id] = pLabel;
+        m_map_lables[i] = pLabel;
     }
 }
 
@@ -228,8 +228,8 @@ void Game::update_labels()
     const std::vector<int>& data = m_game->get_data();
     for (int i = 0; i < data.size(); i++)
     {
-        int row = i / m_game->col();
-        int col = i % m_game->col();
+        auto row = i / m_game->col();
+        auto col = i % m_game->col();
         pGrid->addWidget(m_map_lables[data[i]], row, col);
     }
 }

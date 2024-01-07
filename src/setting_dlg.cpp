@@ -6,8 +6,7 @@ std::map<GameType, QString> SettingDlg::m_game_types = {
 SettingDlg::SettingDlg(QWidget* parent) : QDialog(parent), m_data({})
 {
     ui.setupUi(this);
-    // setLayout(ui.gridLayout);
-
+    setLayout(ui.verticalLayout);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     ui.lineEdit_col->setValidator(new QIntValidator);
@@ -67,9 +66,7 @@ bool SettingDlg::is_changed()
 {
     SettingDlgData data;
     get_data(data);
-    if (data != m_data)
-        return true;
-    return false;
+    return data != m_data;
 }
 
 void SettingDlg::on_okButton_clicked()
