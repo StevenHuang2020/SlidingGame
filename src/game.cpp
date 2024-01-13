@@ -16,7 +16,7 @@ Game::Game(QWidget* parent)
     read_settings();
 
     m_game = std::make_unique<SlidingGame>(m_row, m_col);
-
+    m_hintWnd = std::make_unique<HintWnd>();
     init_game();
 
     on_actionNew_triggered();
@@ -50,6 +50,14 @@ void Game::on_actionNew_triggered()
     print_data("new game:");
 
     update_labels();
+}
+
+void Game::on_actionHint_triggered()
+{
+    if (m_hintWnd)
+    {
+        m_hintWnd->show();
+    }
 }
 
 void Game::mousePressEvent(QMouseEvent* event)
@@ -129,6 +137,18 @@ void Game::init_game()
         m_labels.push_back(pLabel);
         m_map_lables[i] = pLabel;
     }
+
+    update_hintWnd();
+}
+
+void Game::update_hintWnd()
+{
+    if (!m_hintWnd)
+        return;
+
+    SettingDlg::SettingDlgData data;
+    get_game_data(data);
+    m_hintWnd->InitHint(data);
 }
 
 void Game::clear_tempfiles(const QString& path)
@@ -276,11 +296,8 @@ bool Game::show_yesno_dlg(const QString& title, const QString& text)
     return (reply == QMessageBox::Yes);
 }
 
-void Game::on_actionSetting_triggered()
+void Game::get_game_data(SettingDlg::SettingDlgData& data)
 {
-    SettingDlg dialog(this);
-
-    SettingDlg::SettingDlgData data;
     data.col = m_game->col();
     data.row = m_game->row();
     data.type = m_type;
@@ -289,6 +306,14 @@ void Game::on_actionSetting_triggered()
     data.bk_music_check = m_music_on;
     data.color_active = m_color_active;
     data.color_noactive = m_color_noactive;
+}
+
+void Game::on_actionSetting_triggered()
+{
+    SettingDlg dialog(this);
+
+    SettingDlg::SettingDlgData data;
+    get_game_data(data);
 
     dialog.init_dlg_value(data);
 
@@ -327,7 +352,7 @@ void Game::play_background(bool play)
 {
     QFile file(m_music);
     if (!file.exists())
-        return;
+        m_music = default_game_music();
 
     if (play)
     {

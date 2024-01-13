@@ -53,6 +53,7 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionHint"/>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuNew"/>
@@ -81,6 +82,11 @@
   <action name="actionCamera">
    <property name="text">
     <string>Camera</string>
+   </property>
+  </action>
+  <action name="actionHint">
+   <property name="text">
+    <string>Hint</string>
    </property>
   </action>
  </widget>

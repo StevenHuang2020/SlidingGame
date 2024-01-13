@@ -14,10 +14,11 @@
 #include <map>
 #include <memory>
 
+#include "ui_game.h"
 #include "app_settings.h"
 #include "setting_dlg.h"
 #include "sliding_game.h"
-#include "ui_game.h"
+#include "hint_dlg.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -69,6 +70,8 @@ private:
     bool show_yesno_dlg(const QString& title, const QString& text);
     void show_msg_dlg(const QString& message = "", const QString& windowTitle = "Warning");
     void show_msg_Status(const QString& message);
+    void get_game_data(SettingDlg::SettingDlgData &data);
+    void update_hintWnd();
     QString default_game_image()
     {
         return get_abs_path(m_res_path + "puzzle.png");
@@ -85,6 +88,7 @@ private slots:
     void on_actionQuit_triggered() { QMainWindow::close(); }
     void on_actionAbout_triggered() { QApplication::aboutQt(); }
     void on_actionSetting_triggered();
+    void on_actionHint_triggered();
 
 private:
     Ui::gameClass ui;
@@ -94,8 +98,8 @@ private:
     std::vector<QLabel*> m_labels;
     static QString m_res_path;
     static QString m_tmp_path;
-    int m_col{3};
-    int m_row{3};
+    uint8_t m_col{3};
+    uint8_t m_row{3};
     GameType m_type;
     QString m_image; // puzzle image path
     QString m_music; // background music file
@@ -106,5 +110,6 @@ private:
     std::unique_ptr<QMediaPlayer> m_bkmusic_player;
     std::unique_ptr<QAudioOutput> m_audioOutputDev;
     std::unique_ptr<QSoundEffect> m_effect;
+    std::unique_ptr<HintWnd> m_hintWnd;
     AppSettings m_settings;
 };

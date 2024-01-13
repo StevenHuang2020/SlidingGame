@@ -21,8 +21,8 @@ public:
 public:
     typedef struct SettingDlgData
     {
-        int col{0};
-        int row{0};
+        uint8_t col{0};
+        uint8_t row{0};
         GameType type;
         QString puzzle_image;
         QString bk_music;

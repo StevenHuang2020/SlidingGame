@@ -86,6 +86,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app_settings.cpp" />
+    <ClCompile Include="hint_dlg.cpp" />
     <ClCompile Include="setting_dlg.cpp" />
     <ClCompile Include="sliding_game.cpp" />
     <QtRcc Include="game.qrc" />
@@ -94,6 +95,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
     <None Include="game.ico" />
+    <QtUic Include="hint_dlg.ui" />
     <QtUic Include="setting_dlg.ui" />
     <ResourceCompile Include="game.rc" />
   </ItemGroup>
@@ -102,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app_settings.h" />
+    <QtMoc Include="hint_dlg.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
