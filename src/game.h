@@ -80,6 +80,7 @@ private:
     {
         return get_abs_path(m_res_path + "music.mp3");
     }
+    void closeEvent(QCloseEvent* event);
 
 private:
     void mousePressEvent(QMouseEvent* event) override;

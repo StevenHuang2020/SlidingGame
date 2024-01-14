@@ -30,6 +30,11 @@ Game::~Game()
     final_game();
 }
 
+void Game::closeEvent(QCloseEvent*)
+{
+    delete this;
+}
+
 QString Game::get_abs_path(const QString& file) const
 {
     QDir dir(file);
